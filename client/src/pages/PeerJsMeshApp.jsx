@@ -102,7 +102,10 @@ export default function PeerJsMeshApp() {
   // (roster, messages, ...) so it only runs once per mount —
   // see MeshApp.jsx for what happens when that rule is broken.
   useEffect(() => {
-    signalingSocket.on("disconnect", () => setJoined(false));
+    // NOTE: deliberately not calling setJoined(false) on disconnect — the
+    // signaling socket going down only means new peers can't be discovered;
+    // any DataConnections already open (through the separate PeerJS broker)
+    // are unaffected and keep working, so the chat UI should stay put.
 
     signalingSocket.on("peer_joined", ({ peerId, socketId }) => {
       setRoster((prev) => [...prev, { peerId, socketId, connState: "connecting" }]);

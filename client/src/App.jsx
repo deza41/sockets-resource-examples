@@ -9,6 +9,7 @@ import MeshApp from "./pages/MeshApp";
 import MeshGameApp from "./pages/MeshGameApp";
 import PeerJsMeshApp from "./pages/PeerJsMeshApp";
 import PeerConnect4App from "./pages/PeerConnect4App";
+import ShareCodeApp from "./pages/ShareCodeApp";
 import "./styles/app.css";
 
 export default function App() {
@@ -67,6 +68,11 @@ export default function App() {
               🔴🟡 Connect 4 (PeerJS)
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/share-code" className={({ isActive }) => isActive ? "active" : ""}>
+              🔗 Share Code (No Server)
+            </NavLink>
+          </li>
         </ul>
       </nav>
 
@@ -81,6 +87,7 @@ export default function App() {
           <Route path="/mesh-game" element={<MeshGameApp />} />
           <Route path="/peerjs-mesh" element={<PeerJsMeshApp />} />
           <Route path="/connect4" element={<PeerConnect4App />} />
+          <Route path="/share-code" element={<ShareCodeApp />} />
         </Routes>
       </main>
     </div>

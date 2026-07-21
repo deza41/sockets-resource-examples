@@ -182,10 +182,11 @@ export default function MeshGameApp() {
   useEffect(() => {
     signalingSocket.connect();
     signalingSocket.on("connect", () => setStatus("connected"));
-    signalingSocket.on("disconnect", () => {
-      setStatus("disconnected");
-      setJoined(false);
-    });
+    // NOTE: deliberately not calling setJoined(false) here. The signaling
+    // socket going down only means new peers can't be discovered — any
+    // DataChannels already open are unaffected and keep working, so we
+    // shouldn't yank the map away from someone mid-game.
+    signalingSocket.on("disconnect", () => setStatus("disconnected"));
 
     signalingSocket.on("peer_joined", ({ peerId, socketId }) => {
       peersRef.current = [...peersRef.current, { peerId, socketId }];

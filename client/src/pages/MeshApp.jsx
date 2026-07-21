@@ -167,10 +167,11 @@ export default function MeshApp() {
   useEffect(() => {
     signalingSocket.connect();
     signalingSocket.on("connect", () => setStatus("connected"));
-    signalingSocket.on("disconnect", () => {
-      setStatus("disconnected");
-      setJoined(false);
-    });
+    // NOTE: deliberately not calling setJoined(false) here. The signaling
+    // socket going down only means new peers can't be discovered — any
+    // DataChannels already open are unaffected and keep working, so we
+    // shouldn't yank the chat UI away from someone mid-conversation.
+    signalingSocket.on("disconnect", () => setStatus("disconnected"));
 
     // ── peer_joined: a new peer entered the call ──────────────
     // We are the initiator — create offer

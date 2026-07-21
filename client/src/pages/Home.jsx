@@ -66,6 +66,14 @@ const examples = [
       "A direct 1:1 PeerJS DataConnection, no room/presence system needed — generate a code, share it, and play. Only the column played is ever sent over the wire.",
     tags: ["WebRTC", "PeerJS", "game", "peer-to-peer"],
   },
+  {
+    path: "/share-code",
+    emoji: "🔗",
+    title: "P2P Group Chat (Share Code — No Server)",
+    description:
+      "Zero server of ours involved in signaling — copy-paste offer/answer codes by hand. A host relays messages between joiners over a star of pairwise DataChannels, so it scales past 1:1.",
+    tags: ["WebRTC", "manual signaling", "no server", "peer-to-peer"],
+  },
 ];
 
 export default function Home() {

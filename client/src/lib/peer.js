@@ -14,10 +14,10 @@
  */
 
 export const PEER_SERVER_OPTS = {
-  host: "localhost",
-  port: 3002,
+  host: import.meta.env.VITE_PEERJS_HOST || "localhost",
+  port: Number(import.meta.env.VITE_PEERJS_PORT) || 3002,
   path: "/peerjs/mesh",
-  secure: false,
+  secure: import.meta.env.VITE_PEERJS_SECURE === "true",
   config: {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },

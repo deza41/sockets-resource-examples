@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { Routes, Route, NavLink, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import ChatApp from "./pages/ChatApp";
 import BroadcastApp from "./pages/BroadcastApp";
@@ -13,12 +13,39 @@ import ShareCodeApp from "./pages/ShareCodeApp";
 import "./styles/app.css";
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Close the slide-over whenever the route changes (mobile nav)
+  React.useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   return (
     <div className="app">
-      <nav className="sidebar">
+      <button
+        className="menu-toggle"
+        onClick={() => setMenuOpen(true)}
+        aria-label="Open menu"
+      >
+        ☰
+      </button>
+
+      {menuOpen && (
+        <div className="sidebar-overlay" onClick={() => setMenuOpen(false)} />
+      )}
+
+      <nav className={`sidebar ${menuOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <h1>🔌 Socket Examples</h1>
           <p>Socket.io + WebRTC</p>
+          <button
+            className="menu-close"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
         <ul className="nav-list">
           <li>

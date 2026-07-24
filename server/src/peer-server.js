@@ -9,37 +9,26 @@
  *  writing one by hand like /signaling does for the raw-WebRTC
  *  mesh examples.
  *
- *  This mounts ExpressPeerServer as ordinary Express middleware —
- *  but on its OWN dedicated Express app + http.Server + port,
- *  not the main API server's. Reason: `ExpressPeerServer` sets up
- *  a raw `ws` WebSocket server under the hood, and having two
- *  independent WebSocket implementations (`ws` here, engine.io
- *  for Socket.io) both listening for "upgrade" events on the SAME
- *  http.Server corrupts each other's handshakes. A dedicated
- *  server sidesteps that entirely while still being "an Express
- *  peer server" in the way ExpressPeerServer is meant to be used.
+ *  This mounts ExpressPeerServer on the SAME Express app/http.Server
+ *  as the rest of this project (see index.js), at "/peerjs". It
+ *  coexists with Socket.io on that one server because both `ws`
+ *  (which ExpressPeerServer uses) and engine.io only handle
+ *  upgrade requests whose URL matches their own configured path —
+ *  each ignores upgrade requests meant for the other. Sharing one
+ *  server/port matters on hosts like Render that only expose a
+ *  single public port per service.
  *
- *  Every client-facing example (chat, Connect 4, ...) shares this
- *  one broker — see client/src/lib/peer.js for the matching
- *  client-side config.
- *
- *  Reachable at ws://localhost:3002/peerjs/mesh — that's the
- *  app.use() mount prefix ("/peerjs") plus this server's own
- *  `path` option ("/mesh").
+ *  Every client-facing example (Connect 4, mesh) shares this one
+ *  broker — see client/src/lib/peer.js for the matching client-side
+ *  config. Reachable at "/peerjs/mesh" (this app's "/peerjs" mount
+ *  prefix plus ExpressPeerServer's own `path` option, "/mesh").
  * ============================================================
  */
 
-const express = require("express");
-const http = require("http");
 const { ExpressPeerServer } = require("peer");
 
-const PEER_PORT = process.env.PEERJS_PORT || 3002;
-
-function registerPeerServer() {
-  const peerApp = express();
-  const peerHttpServer = http.createServer(peerApp);
-
-  const peerServer = ExpressPeerServer(peerHttpServer, {
+function registerPeerServer(app, httpServer) {
+  const peerServer = ExpressPeerServer(httpServer, {
     path: "/mesh",
     allow_discovery: false,
   });
@@ -52,11 +41,7 @@ function registerPeerServer() {
     console.log(`[/peerjs] peer disconnected: ${client.getId()}`);
   });
 
-  peerApp.use("/peerjs", peerServer);
-
-  peerHttpServer.listen(PEER_PORT, () => {
-    console.log(`   /peerjs     — Express PeerJS broker on http://localhost:${PEER_PORT}/peerjs/mesh`);
-  });
+  app.use("/peerjs", peerServer);
 }
 
 module.exports = { registerPeerServer };

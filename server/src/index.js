@@ -15,9 +15,9 @@
  *  /private     → private messaging between two users
  *  /rooms       → room-based grouping (think Slack channels)
  *  /signaling   → WebRTC signaling relay for peer-to-peer mesh
- *  /peerjs      → self-hosted PeerJS signaling server, on its own
- *                 port (see peer-server.js for why); used by the
- *                 mesh example built on the `peerjs` library
+ *  /peerjs      → self-hosted PeerJS signaling server, mounted on
+ *                 this same app/port (see peer-server.js); used by
+ *                 the mesh example built on the `peerjs` library
  *                 instead of hand-rolled offer/answer/ICE relaying
  * ============================================================
  */
@@ -60,6 +60,7 @@ registerBroadcast(io);
 registerPrivateMessages(io);
 registerRooms(io);
 registerSignaling(io);
+registerPeerServer(app, httpServer);
 
 // ── 5. Simple REST health-check endpoint ────────────────────
 app.get("/", (req, res) => {
@@ -80,5 +81,5 @@ httpServer.listen(PORT, () => {
   console.log(`   /private    — Private messaging`);
   console.log(`   /rooms      — Room management`);
   console.log(`   /signaling  — WebRTC signaling relay`);
-  registerPeerServer(); // starts its own listener on PEERJS_PORT (3002) and logs it
+  console.log(`   /peerjs     — Express PeerJS broker at /peerjs/mesh`);
 });

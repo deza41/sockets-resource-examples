@@ -42,15 +42,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { signalingSocket } from "../lib/sockets";
-
-// Public STUN server — helps peers discover their public IP.
-// In production, add TURN servers for users behind strict NATs.
-const ICE_SERVERS = {
-  iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-  ],
-};
+import { ICE_SERVERS } from "../lib/ice";
 
 export default function MeshApp() {
   const [peerId, setPeerId] = useState("");

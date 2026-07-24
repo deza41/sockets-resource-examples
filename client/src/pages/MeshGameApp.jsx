@@ -29,13 +29,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { signalingSocket } from "../lib/sockets";
-
-const ICE_SERVERS = {
-  iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-  ],
-};
+import { ICE_SERVERS } from "../lib/ice";
 
 const MAP_WIDTH = 900;
 const MAP_HEIGHT = 520;
